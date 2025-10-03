@@ -18,8 +18,10 @@ class TestCreateCourier:
         print(data)
 
         response = requests.post(f"{URL}/api/v1/courier", data=payload)
-        assert response.status_code == 201
-        assert response.json() == {"ok": True}
+
+        assert response.status_code == 201, f"Failed to create courier: {response.status_code}"
+        assert response.json() == {'ok': True}, f"Unexpected response: {response.json()}"
+
 
         login_payload = {
             "login": payload["login"],
@@ -29,10 +31,10 @@ class TestCreateCourier:
         assert login_response.status_code == 200
 
         courier_id = login_response.json().get("id")
-        assert courier_id is not None
+        assert courier_id is not None,  "Courier ID should not be None."
 
-        delete_response = requests.delete(f"{URL}/api/v1/courier/{courier_id}")
-        assert delete_response.status_code == 200
+        delete_response = requests.delete(f"{URL}/api/v1/courier/{courier_id}")  # Удаление курьера
+        assert delete_response.status_code == 200, f"Failed to delete courier. Status code: {delete_response.status_code}"
 
 
     @allure.title('Нельзя создать дубль курьера')
