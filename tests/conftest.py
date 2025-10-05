@@ -20,10 +20,10 @@ def delete_courier_data():
         "password": login_pass[1]
     }
     response = requests.post(f"{URL}/api/v1/courier/login", data=courier_payload)
+    assert response.status_code == 200, f"Failed to login courier: {response.status_code}"
 
-    assert response.status_code == 200
     courier_id = response.json()["id"]
-    assert courier_id is not None
+    assert courier_id is not None, "Courier ID should not be None."
 
     yield courier_payload
 

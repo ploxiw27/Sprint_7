@@ -20,7 +20,14 @@ class TestListOrder:
             "color": "BLACK"
         }
 
-        requests.post(f"{URL}/api/v1/orders", json=payload)
-        r = requests.get(f"{URL}/api/v1/orders")
-        assert r.status_code == 200
-        assert 'orders' in r.json()
+        with allure.step('Отправка запроса на создание заказа'):
+            requests.post(f"{URL}/api/v1/orders", json=payload)
+
+        with allure.step('Отправка запроса на получение списка заказов'):
+            response = requests.get(f"{URL}/api/v1/orders")
+
+        with allure.step('Проверка статуса на получение списка заказов'):
+            assert response.status_code == 200, f'Failed to get orders:{response.status_code}'
+
+        with allure.step('Проверка на присутствие ключа orders'):
+            assert 'orders' in response.json()

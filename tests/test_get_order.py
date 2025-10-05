@@ -26,6 +26,11 @@ class TestGetOrder:
             "color": color
         }
 
-        r = requests.post(f"{URL}/api/v1/orders", json=payload)
-        assert r.status_code == 201
-        assert 'track' in r.json()
+        with allure.step('Отправка запроса на содание заказа'):
+            response = requests.post(f"{URL}/api/v1/orders", json=payload)
+
+        with allure.step('Проверка статуса ответа на создание заказа'):
+            assert response.status_code == 201
+
+        with allure.step('Проверка на присутствие ключа track'):
+            assert 'track' in response.json()
